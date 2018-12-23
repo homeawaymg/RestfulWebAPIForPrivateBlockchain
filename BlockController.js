@@ -1,5 +1,7 @@
 const SHA256 = require('crypto-js/sha256');
 const BlockClass = require('./Block.js');
+const BlockChain = require('./BlockChain.js')
+const Joi = require('joi');
 
 /**
  * Controller Definition to encapsulate routes to work with blocks
@@ -12,8 +14,8 @@ class BlockController {
      */
     constructor(server) {
         this.server = server;
-        this.blocks = [];
-        this.initializeMockData();
+        this.blocks = new BlockChain.Blockchain();
+        //this.initializeMockData();
         this.getBlockByIndex();
         this.postNewBlock();
     }
@@ -25,11 +27,21 @@ class BlockController {
         this.server.route({
             method: 'GET',
             path: '/api/block/{index}',
-            handler: (request, h) => {
-               return this.blocks[request.params.index];
+            
+            options: {
+                validate: {
+                        params: {
+                            index: Joi.number().integer().min(0).required()
+                    }
+                }
+            },
+            handler: async (request, h) => {
+                const result = await this.blocks.getBlock(request.params.index);
+                return JSON.stringify(result).toString();
             }
-        });
+        })
     }
+    
 
     /**
      * Implement a POST Endpoint to add a new Block, url: "/api/block"
@@ -38,11 +50,18 @@ class BlockController {
         this.server.route({
             method: 'POST',
             path: '/api/block',
+            options: {
+                validate: {
+                    payload: {
+                        data: Joi.string().min(1).required() 
+                    }
+                }
+            },
             handler: (request, h) => {
                 let blockAux = new BlockClass.Block(request.payload.data);
                 blockAux.height = this.blocks.length;
                 blockAux.hash = SHA256(JSON.stringify(blockAux)).toString();
-                this.blocks.push(blockAux); 
+                this.blocks.addBlock(blockAux); 
                 return `Successfully added ${JSON.stringify(blockAux).toString()} at ${blockAux.height}`;
             }
         });
@@ -53,12 +72,17 @@ class BlockController {
      */
     initializeMockData() {
         if(this.blocks.length === 0){
-            for (let index = 0; index < 10; index++) {
-                let blockAux = new BlockClass.Block(`Test Data #${index}`);
-                blockAux.height = index;
-                blockAux.hash = SHA256(JSON.stringify(blockAux)).toString();
-                this.blocks.push(blockAux);
-            }
+            (function theLoop (i) {
+                setTimeout(function () {
+                    let blockTest = new Block.Block("Test Block - " + (i + 1));
+                    // Be careful this only will work if your method 'addBlock' in the Blockchain.js file return a Promise
+                    this.blocks.addBlock(blockTest).then((result) => {
+                        console.log(result);
+                        console.log(`added block ${i++}`);
+                        if (i < 10) theLoop(i);
+                    });
+                }, 5000);
+              })(0);
         }
     }
 
