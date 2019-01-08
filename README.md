@@ -1,6 +1,6 @@
 # Restful WebAPI for Private Blockchain
 
-RESTful API using a Node.js HAPI framewor that will interfaces with a private blockchain. 
+RESTful API using a Node.js HAPI framework that interfaces with a private blockchain. 
 Functionality that can be consumed by several types of web clients ranging from desktop, mobile, and IoT devices for a private blockchain. 
 
 The API project exposes two endpoints:
@@ -14,81 +14,41 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+1. NodeJS - You should have Nodejs v10.13.0 or higher installed
+2. NPM - npm version 6.4.1 or higher is recommended
 
-```
-Give examples
-```
 
 ### Installing
 
 A step by step series of examples that tell you how to get a development env running
 
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
+- Clone this project to your workstation
+- Run npm install
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
+Start the server using the following command
+    ``` node app.js
+    You should see a message that states  "Server running at: http://localhost:8000"
 
-### Break down into end to end tests
+    The server support 2 endpoints
 
-Explain what these tests test and why
+    #1  - POST method to http://localhost:8000/api/block  - this is used to add new blocks to the blockchain - here is a postman example
+        POST /api/block HTTP/1.1
+        Host: localhost:8000
+        Content-Type: application/json
+        Cache-Control: no-cache
+        Postman-Token: 008c6496-aa5b-415b-854e-a568e0589877
 
-```
-Give an example
-```
+        {
+            "data":"Block of Data"
+        } 
+    #2  - Get method to http://localhost:8000/api/block/{height} - this is used to retrieve a block from the blockchain give a height - there is a postman example
+        GET /api/block/0 HTTP/1.1
+        Host: localhost:8000
+        Content-type: application/json
+        Cache-Control: no-cache
+        Postman-Token: 008c6496-aa5b-415b-854e-a568e0589877
 
-### And coding style tests
 
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
-## Authors
-
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
 

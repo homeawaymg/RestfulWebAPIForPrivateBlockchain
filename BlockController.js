@@ -9,7 +9,7 @@ const Joi = require('joi');
 class BlockController {
 
     /**
-     * Constructor to create a new BlockController, you need to initialize here all your endpoints
+     * Constructor to create a new BlockController
      * @param {*} server 
      */
     constructor(server) {
@@ -18,6 +18,7 @@ class BlockController {
         //this.initializeMockData();
         this.getBlockByIndex();
         this.postNewBlock();
+        this.initializeMockData();
     }
 
     /**
@@ -36,7 +37,14 @@ class BlockController {
                 }
             },
             handler: async (request, h) => {
-                const result = await this.blocks.getBlock(request.params.index);
+                let result = '';
+                try {
+                    result = await this.blocks.getBlock(request.params.index);
+                }
+                catch (err)
+                {
+                    result =err.toString();
+                }
                 return JSON.stringify(result).toString();
             }
         })
@@ -57,12 +65,12 @@ class BlockController {
                     }
                 }
             },
-            handler: (request, h) => {
+            handler: async (request, h) => {
                 let blockAux = new BlockClass.Block(request.payload.data);
-                blockAux.height = this.blocks.length;
+                
                 blockAux.hash = SHA256(JSON.stringify(blockAux)).toString();
-                this.blocks.addBlock(blockAux); 
-                return `Successfully added ${JSON.stringify(blockAux).toString()} at ${blockAux.height}`;
+                let x = await this.blocks.addBlock(blockAux); 
+                return `${x}`;
             }
         });
     }
@@ -70,23 +78,20 @@ class BlockController {
     /**
      * Help method to inizialized Mock dataset, adds 10 test blocks to the blocks array
      */
+
+     /**
+     * Implement a GET Endpoint to retrieve a block by index, url: "/api/block/:index"
+     */
     initializeMockData() {
-        if(this.blocks.length === 0){
-            (function theLoop (i) {
-                setTimeout(function () {
-                    let blockTest = new Block.Block("Test Block - " + (i + 1));
-                    // Be careful this only will work if your method 'addBlock' in the Blockchain.js file return a Promise
-                    this.blocks.addBlock(blockTest).then((result) => {
-                        console.log(result);
-                        console.log(`added block ${i++}`);
-                        if (i < 10) theLoop(i);
-                    });
-                }, 5000);
-              })(0);
-        }
+        this.server.route({
+            method: 'POST',
+            path: '/api/blockchain/init',
+    
+            handler: (request, h) => {
+                initializeMockData();
+            }
+        })
     }
-
-
 }
 
 /**
