@@ -27,7 +27,7 @@ class BlockController {
     getBlockByIndex() {
         this.server.route({
             method: 'GET',
-            path: '/api/block/{index}',
+            path: '/block/{index}',
             
             options: {
                 validate: {
@@ -45,7 +45,7 @@ class BlockController {
                 {
                     result =err.toString();
                 }
-                return JSON.stringify(result).toString();
+                return result;
             }
         })
     }
@@ -57,7 +57,7 @@ class BlockController {
     postNewBlock() {
         this.server.route({
             method: 'POST',
-            path: '/api/block',
+            path: '/block',
             options: {
                 validate: {
                     payload: {
@@ -70,7 +70,7 @@ class BlockController {
                 
                 blockAux.hash = SHA256(JSON.stringify(blockAux)).toString();
                 let x = await this.blocks.addBlock(blockAux); 
-                return `${x}`;
+                return JSON.parse(x);
             }
         });
     }
@@ -85,10 +85,10 @@ class BlockController {
     initializeMockData() {
         this.server.route({
             method: 'POST',
-            path: '/api/blockchain/init',
+            path: '/blockchain/init',
     
             handler: (request, h) => {
-                initializeMockData();
+                //initializeMockData();
             }
         })
     }

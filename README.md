@@ -33,7 +33,7 @@ Start the server using the following command
 
     The server support 2 endpoints
 
-    #1  - POST method to http://localhost:8000/api/block  - this is used to add new blocks to the blockchain - here is a postman example
+    #1  - POST method to http://localhost:8000/block  - this is used to add new blocks to the blockchain - here is a postman example
         POST /api/block HTTP/1.1
         Host: localhost:8000
         Content-Type: application/json
@@ -43,7 +43,7 @@ Start the server using the following command
         {
             "data":"Block of Data"
         } 
-    #2  - Get method to http://localhost:8000/api/block/{height} - this is used to retrieve a block from the blockchain give a height - there is a postman example
+    #2  - Get method to http://localhost:8000/block/{height} - this is used to retrieve a block from the blockchain give a height - there is a postman example
         GET /api/block/0 HTTP/1.1
         Host: localhost:8000
         Content-type: application/json
